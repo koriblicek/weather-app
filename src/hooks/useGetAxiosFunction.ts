@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { useCallback, useEffect, useState } from "react";
 
-interface IGetErrorObj {
+export interface IGetErrorObj {
     code: number;
     message: string;
     url: string;

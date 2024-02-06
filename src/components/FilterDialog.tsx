@@ -34,7 +34,7 @@ export function FilterDialog({ open, initialSearchParameters, onClose, onConfirm
             maxWidth='sm'
         >
             <DialogTitle>
-                Specify search parameters
+                Specify weather conditions parameters
             </DialogTitle>
             <DialogContent dividers>
                 <Grid container spacing={2}>
@@ -75,7 +75,12 @@ export function FilterDialog({ open, initialSearchParameters, onClose, onConfirm
                             disableCloseOnSelect
                             getOptionLabel={(option) => option}
                             onChange={(_, values) => {
-                                setFilterData((prevData) => ({ ...prevData, hourly: values }));
+                                //keep temperature_2m always registered
+                                let newList = [...values];
+                                if (!newList.includes("temperature_2m")) {
+                                    newList = ["temperature_2m", ...newList];
+                                }
+                                setFilterData((prevData) => ({ ...prevData, hourly: newList }));
                             }}
                             renderOption={(props, option, { selected }) => (
                                 <li {...props}>
