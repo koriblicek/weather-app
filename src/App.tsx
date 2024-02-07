@@ -79,7 +79,7 @@ export default function App() {
             <Tab icon={<ShowChartIcon />} label="Weather chart" wrapped />
             <Tab icon={<CalculateIcon />} label="Heat index calculator" wrapped />
           </Tabs>
-          <Box sx={{ display: tabValue !== 2 ? 'block' : 'none' }}>
+          <Box sx={{ display: tabValue !== 2 ? 'block' : 'none', p:1 }}>
             <Grid container gap={1}>
               <Grid item xs={12}>
                 <LocationSelector updateLocation={setLocation} initialValue={initialLocation} />
@@ -91,7 +91,6 @@ export default function App() {
                   onClick={() => setIsFilterDialogOpen(true)}
                   variant="outlined"
                   startIcon={<TuneIcon />}
-                  sx={{ borderRadius: 0 }}
                 >
                   Specify weather conditions parameters
                 </Button>
