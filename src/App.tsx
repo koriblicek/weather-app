@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
 import { FilterDialog } from "./components/FilterDialog";
-import { OPEN_METEO_API_URL, OpenMeteoDataStructureType, SearchParameters } from "./types";
-import { Button, Paper, Stack, Tab, Tabs } from "@mui/material";
+import { GeocodingType, OPEN_METEO_API_URL, OpenMeteoDataStructureType, SearchParameters } from "./types";
+import { Box, Button, Grid, Paper, Stack, Tab, Tabs } from "@mui/material";
 import { convertDate } from "./utils";
 import TuneIcon from '@mui/icons-material/Tune';
 import TableRowsIcon from '@mui/icons-material/TableRows';
@@ -14,6 +14,15 @@ import { ErrorDialog } from "./components/ErrorDialog";
 import { ChartPanel } from "./components/ChartPanel";
 import { TablePanel } from "./components/TablePanel";
 import { CalculatorPanel } from "./components/CalculatorPanel";
+import { LocationSelector } from "./components/LocationSelector";
+
+const initialLocation = {
+  "id": 2643743,
+  "name": "London",
+  "latitude": 51.50853,
+  "longitude": -0.12574,
+  "elevation": 25.0, "feature_code": "PPLC", "country_code": "GB", "admin1_id": 6269131, "admin2_id": 2648110, "timezone": "Europe/London", "population": 7556900, "country_id": 2635167, "country": "United Kingdom", "admin1": "England", "admin2": "Greater London"
+};
 
 const initialSearchParameters = {
   latitude: 51.50853,
@@ -25,6 +34,7 @@ const initialSearchParameters = {
 } as SearchParameters;
 
 export default function App() {
+  const [location, setLocation] = useState<GeocodingType>(initialLocation);
   const [isFilterDialogOpen, setIsFilterDialogOpen] = useState<boolean>(false);
   const [tabValue, setTabValue] = useState<number>(0);
 
@@ -35,8 +45,8 @@ export default function App() {
 
   //initialize load on filter change
   useEffect(() => {
-    axiosFetch(OPEN_METEO_API_URL, { params: searchParams });
-  }, [searchParams, axiosFetch]);
+    axiosFetch(OPEN_METEO_API_URL, { params: { ...searchParams, longitude: location.longitude, latitude: location.latitude } });
+  }, [searchParams, axiosFetch, location]);
 
   useEffect(() => {
     if (response !== null) {
@@ -55,7 +65,7 @@ export default function App() {
 
   return (
     <Fragment>
-      <Paper sx={{ maxWidth: '640px' }}>
+      <Paper>
         <Stack spacing={1}>
           <Tabs
             variant="fullWidth"
@@ -69,15 +79,25 @@ export default function App() {
             <Tab icon={<ShowChartIcon />} label="Weather chart" wrapped />
             <Tab icon={<CalculateIcon />} label="Heat index calculator" wrapped />
           </Tabs>
-          <Button
-            fullWidth
-            onClick={() => setIsFilterDialogOpen(true)}
-            variant="outlined"
-            startIcon={<TuneIcon />}
-            sx={{ borderRadius: 0 }}
-          >
-            Specify weather conditions parameters
-          </Button>
+          <Box sx={{ display: tabValue !== 2 ? 'block' : 'none' }}>
+            <Grid container gap={1}>
+              <Grid item xs={12}>
+                <LocationSelector updateLocation={setLocation} initialValue={initialLocation} />
+              </Grid>
+              <Grid item xs>
+                <Button
+                  fullWidth
+                  size="large"
+                  onClick={() => setIsFilterDialogOpen(true)}
+                  variant="outlined"
+                  startIcon={<TuneIcon />}
+                  sx={{ borderRadius: 0 }}
+                >
+                  Specify weather conditions parameters
+                </Button>
+              </Grid>
+            </Grid>
+          </Box>
           <TabPanel value={tabValue} index={0}>
             <TablePanel data={data} />
           </TabPanel>

@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box,  Grow } from "@mui/material";
 import { PropsWithChildren } from "react";
 
 interface TabPanelProps {
@@ -14,11 +14,11 @@ export default function TabPanel({ index, value, children, ...other }: PropsWith
             id={`full-width-tabpanel-${index}`}
             {...other}
         >
-            {(value === index) && (
+            <Grow in={value === index}>
                 <Box sx={{ p: 1 }}>
                     {children}
                 </Box>
-            )}
+            </Grow>
         </div>
     );
 }

@@ -57,7 +57,7 @@ export function FilterDialog({ open, initialSearchParameters, onClose, onConfirm
                                             key={unit[0]}
                                             value={unit[0]}
                                         >
-                                            {unit[1]}
+                                            {`${unit[1]} (${unit[2]})`}
                                         </MenuItem>
                                     );
                                 })}
